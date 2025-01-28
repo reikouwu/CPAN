@@ -1,20 +1,17 @@
 {
-  "name": "lab01",
+  "name": "cpan",
   "version": "1.0.0",
-  "main": "lab01.js",
-  "type": "module",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "lodash": "^4.17.21"
-  },
-  "devDependencies": {
+    "express": "^4.21.2",
     "nodemon": "^3.1.9"
   }
 }
