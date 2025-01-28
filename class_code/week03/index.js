@@ -14,7 +14,7 @@ app.get('/search',(req,res) => (
     res.send("You came to the /search route")
 ))
 
-app.get('/item/:itemID',(req,res) => (
+app.get('/item/:itemID',(req,res) => (    
     console.log(req.url),
     console.log(req.headers), 
     console.log(req.query),
