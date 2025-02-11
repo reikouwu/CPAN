@@ -10,10 +10,26 @@ const App = () => {
     e.preventDefault();
 
     try {
-      const submission = { username, password };
-      console.log(submission);
+      const fetchMultiple = async () => {
+        try {
+          const response = await fetch("http://localhost:8000/multiple");
+          const data = await response.json();
+          const filePromises = data.map(async (filename) => {
+            const fetchFilenameData = await fetch(`http://localhost:8000/fetch/file/${filename}`);
+            const fileBlob = await fetchFilenameData.blob();
+            return URL.createObjectURL(fileBlob);
+          });
+          const imageURLs = await Promise.all(filePromises);
+          console.log(imageURLs);
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-      const response = await fetch(`http://localhost:8000/text-form`, {
+      await fetchMultiple();
+
+      const submission = { username, password };
+      const response = await fetch("http://localhost:8000/text-form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(submission),
@@ -67,36 +83,26 @@ const App = () => {
 
   return (
     <div>
-      <h1>Text Form</h1>
-      <form onSubmit={handleSubmitTextForm}>
-        <input
-          type="text"
-          placeholder="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Submit</button>
-      </form>
       <p>{message}</p>
-      <p>---------------------------------------</p>
-
-      <h1>MultiPart Form</h1>
-      <form onSubmit={handleSubmitMultiPartForm}>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-          required
-        />
-        <button type="submit">Upload Image</button>
+      <h2>fetch</h2>
+      <button onClick={() => console.log("fetchSingle")}>fetchSingle</button>
+      {image && (
+        <div>
+          <h3>SingleFile</h3>
+          <img src={image} alt="single file" />
+        </div>
+      )}
+      <form onSubmit={handleSubmitTextForm}>
+        <h2>handle single file</h2>
+        <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+        <button type="submit">Submit</button>
+        <button type="button" onClick={() => console.log("fetchMultiple")}>fetchMultiple</button>
+        {image && (
+          <div>
+            <h3>Multiple Files</h3>
+            <img src={URL.createObjectURL(image)} alt="multiple files" />
+          </div>
+        )}
       </form>
     </div>
   );
